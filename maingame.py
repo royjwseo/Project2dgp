@@ -31,9 +31,11 @@ def locatetile():
                 Tiles[i].image = load_image('tileru.png')
             else:
                 Tiles[i].image = load_image('tiletop.png')
-        if Tiles[i].y==2:
+
+        if Tiles[i].y==3:
             if Tiles[i].x==7:
-                Tiles[i].image=load_image('doorclose.png')
+
+                Tiles[i].image=load_image('dooropen.png')
 
 def handle_events():
     global GamePlay
@@ -94,16 +96,17 @@ class Body:
             self.frame = 0
         else:
             self.frame = (self.frame + 1) % 10
-            if self.direction == 1:
-                self.x -= 7
-            elif self.direction == 2:
-                self.x += 7
-            elif self.direction == 3:
-                self.y += 7
-            elif self.direction == 4:
-                self.y -= 7
+            if self.direction == 1 and (self.x>45):
+                self.x -= 10
+            elif self.direction == 2 and (self.x<755):
+                self.x += 10
+            elif self.direction == 3 and (self.y<555):
+                self.y += 10
+            if self.direction == 4 and (self.y>45):
+                self.y -= 10
 
     def draw(self):
+
         if self.direction == 0:
             self.image.clip_draw(self.frame * body_width, 50, body_width, body_height, self.x,
                                  self.y)
@@ -140,9 +143,13 @@ class Tile:
         self.image = load_image('tile_mid.png')
 
     def Draw(self):
-        self.image.clip_draw(0, 0, Tile_Size, Tile_Size, self.x * 100 + 50, self.y * 100 + 50)
 
-
+        if(self.x==7 and self.y==3):
+            self.image.clip_draw(0, 0, Tile_Size, 105, self.x * 100 + 50, self.y * 100 + 47)
+        # if(self.x==7 and self.y==2):
+        #     self.image.clip_draw(0, 0, Tile_Size, 105, self.x * 100 + 50, self.y * 100 + 53)
+        else:
+            self.image.clip_draw(0, 0, Tile_Size, Tile_Size, self.x * 100 + 50, self.y * 100 + 50)
 Head = Head()
 Tiles = [Tile() for i in range(0, 48)]
 

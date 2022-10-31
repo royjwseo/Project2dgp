@@ -58,15 +58,39 @@ def handle_events():
                 Head.frame = 1
                 if event.key == SDLK_LEFT:
                     Head.frame = 7
+                    if ball[0].appear==False:
+                        ball[0].appear=True
+                        ball[0].x=Head.x
+                        ball[0].y=Head.y
+                        ball[0].dir=1
+                        ball[0].speed=0
+
 
                 elif event.key == SDLK_RIGHT:
                     Head.frame = 3
+                    if ball[1].appear==False:
+                        ball[1].appear=True
+                        ball[1].x=Head.x
+                        ball[1].y=Head.y
+                        ball[1].dir=2
+                        ball[1].speed=0
 
                 elif event.key == SDLK_UP:
                     Head.frame = 5
-
+                    if ball[2].appear==False:
+                        ball[2].appear=True
+                        ball[2].x=Head.x
+                        ball[2].y=Head.y
+                        ball[2].dir=3
+                        ball[2].speed=0
                 elif event.key == SDLK_DOWN:
                     Head.frame = 1
+                    if ball[3].appear==False:
+                        ball[3].appear=True
+                        ball[3].x=Head.x
+                        ball[3].y=Head.y
+                        ball[3].dir=4
+                        ball[3].speed=0
 
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_a or SDLK_d or SDLK_w or SDLK_s:
@@ -121,7 +145,41 @@ class Body:
 
 
 Body = Body()
+class ball:
+    def __init__(self):
+        ball.image=load_image('ball.png')
+        self.x=Head.x
+        self.y=Head.y
+        self.dir=0
+        self.speed=0
+        self.appear=False
+    def locate(self):
+        return self.x-10,self.y-10,self.x+10,self.y+10
+    def draw(self):
+        if self.appear==True:
+            self.image.clip_draw(0,0,10,10,self.x,self.y)
+        pass
+    def update(self):
+        if self.appear==True:
+            if self.dir==1:
+                self.x-=15+self.speed
+            elif self.dir==2:
+                self.x+=15+self.speed
+            elif self.dir==3:
+                self.y+=15+self.speed
+            elif self.dir==4:
+                self.y-=15+self.speed
+        else:
+            self.x=Head.x
+            self.y=Head.y
+            self.speed-=0.4
+            if self.speed<-15:
+                self.appear=False
+    def stop(self):
+        pass
 class Head:
+
+
     def __init__(self):
         self.image = load_image('Headsheet.png')
         self.frame = 0
@@ -152,7 +210,7 @@ class Tile:
             self.image.clip_draw(0, 0, Tile_Size, Tile_Size, self.x * 100 + 50, self.y * 100 + 50)
 Head = Head()
 Tiles = [Tile() for i in range(0, 48)]
-
+ball=[ball() for i in range(4)]
 for i in range(0, 48):
     Tiles[i].x = i % 8
     Tiles[i].y = i // 8
@@ -164,9 +222,12 @@ while playing:
     clear_canvas()
     for i in range(48):
         Tiles[i].Draw()
-
+    for i in range(4):
+        ball[i].update()
     Body.draw()
     Head.draw()
+    for i in range(4):
+        ball[i].draw()
     update_canvas()
     handle_events()
     delay(0.05)
